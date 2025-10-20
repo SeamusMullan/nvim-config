@@ -33,20 +33,20 @@ require("lazy").setup({
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 
   ---------------------------------------------------------------------------
-  -- Doxygen comment generator
+  -- Documentation comment generator (Doxygen, JSDoc, etc.)
   ---------------------------------------------------------------------------
   {
-    "jla2000/lazydocs.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "L3MON4D3/LuaSnip",
-      "nvimtools/none-ls.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
+    "danymat/neogen",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function()
-      require("lazydocs").setup()
-      -- Keymaps moved to keymaps.lua to avoid duplication
+      require("neogen").setup({
+        enabled = true,
+        languages = {
+          c = { template = { annotation_convention = "doxygen" } },
+          cpp = { template = { annotation_convention = "doxygen" } },
+          python = { template = { annotation_convention = "google_docstrings" } },
+        },
+      })
     end,
   },
 
@@ -133,38 +133,39 @@ require("nvim-treesitter.configs").setup({
 })
 
 -------------------------------------------------------------------------------
--- LSP setup
+-- LSP setup (using new vim.lsp.config API for Neovim 0.11+)
 -------------------------------------------------------------------------------
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
--- Keymaps for LSP actions
-local on_attach = function(_, bufnr)
-  local opts = { noremap = true, silent = true, buffer = bufnr }
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-  vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-  vim.keymap.set("n", "<leader>f", function()
-    vim.lsp.buf.format({ async = true })
-  end, opts)
-end
-
--- Configure language servers
-local lspconfig = require("lspconfig")
-
-lspconfig.clangd.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
+-- Setup LSP keymaps when LSP attaches to buffer
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local opts = { noremap = true, silent = true, buffer = bufnr }
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "<leader>f", function()
+      vim.lsp.buf.format({ async = true })
+    end, opts)
+  end,
 })
 
-lspconfig.pyright.setup({
+-- Configure language servers using new API
+vim.lsp.config("*", {
   capabilities = capabilities,
-  on_attach = on_attach,
 })
 
-lspconfig.lua_ls.setup({
+-- clangd (C/C++)
+vim.lsp.enable("clangd")
+
+-- pyright (Python)
+vim.lsp.enable("pyright")
+
+-- lua_ls (Lua) with custom settings
+vim.lsp.config.lua_ls = {
   capabilities = capabilities,
-  on_attach = on_attach,
   settings = {
     Lua = {
       diagnostics = {
@@ -172,5 +173,6 @@ lspconfig.lua_ls.setup({
       },
     },
   },
-})
+}
+vim.lsp.enable("lua_ls")
 
