@@ -21,6 +21,54 @@ require("lazy").setup({
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 }, -- Colorscheme
   { "nvim-lualine/lualine.nvim" }, -- Statusline
   { "nvim-tree/nvim-web-devicons" }, -- Icons
+  {
+ "andweeb/presence.nvim",
+  event = "VeryLazy", -- Load after startup for better performance
+  config = function()
+    require("presence").setup({
+      -- General options
+      auto_update         = true,
+      neovim_image_text   = "The One True Text Editor",
+      main_image          = "neovim", -- or "file"
+      log_level           = nil, -- "debug", "info", "warn", "error"
+      
+      -- Rich Presence text options
+      editing_text        = "Editing %s",
+      file_explorer_text  = "Browsing %s",
+      git_commit_text     = "Committing changes",
+      plugin_manager_text = "Managing plugins",
+      reading_text        = "Reading %s",
+      workspace_text      = "Working on %s",
+      line_number_text    = "Line %s out of %s",
+    })
+  end,
+  },
+  {
+    "OXY2DEV/markview.nvim",
+    lazy = false,
+  },
+  {
+  "lervag/vimtex",
+  lazy = false,
+  ft = "tex", -- Only load for .tex files
+  init = function()
+    -- VimTeX configuration
+    vim.g.vimtex_view_method = "zathura"
+    
+    -- Disable treesitter for tex files (VimTeX has its own syntax)
+    vim.g.vimtex_syntax_enabled = 1
+  end,
+  config = function()
+    -- Disable treesitter for tex files after VimTeX loads
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "tex",
+      callback = function()
+        vim.treesitter.stop()
+      end,
+    })
+  end,
+},
+
 
   ---------------------------------------------------------------------------
   -- Core dependencies
@@ -31,6 +79,9 @@ require("lazy").setup({
   -- Syntax highlighting & parsing
   ---------------------------------------------------------------------------
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+  { "nvim-treesitter/nvim-treesitter-textobjects",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
 
   ---------------------------------------------------------------------------
   -- Documentation comment generator (Doxygen, JSDoc, etc.)
@@ -124,12 +175,35 @@ cmp.setup({
 require("nvim-treesitter.configs").setup({
   ensure_installed = { "c", "cpp", "python", "lua", "vim", "vimdoc" },
   auto_install = true,
+
   highlight = {
     enable = true,
   },
+
   indent = {
     enable = true,
   },
+
+  textobjects = {
+    move = {
+      enable = true,
+      set_jumps = true,
+
+      -- Functions (methods included)
+      goto_next_start = {
+        ["]]"] = "@function.outer",
+        ["]c"] = "@class.outer",
+      },
+
+      goto_previous_start = {
+        ["[["] = "@function.outer",
+        ["[c"] = "@class.outer",
+      },
+    },
+  },
+ 
+
+  -- next thing
 })
 
 -------------------------------------------------------------------------------
@@ -175,4 +249,15 @@ vim.lsp.config.lua_ls = {
   },
 }
 vim.lsp.enable("lua_ls")
+
+-- for diagnostics and error messages
+
+vim.diagnostic.config({
+  virtual_text = {
+    prefix = "●",
+    spacing = 4,
+    source = "always",
+  },
+  severity_sort = true,
+})
 
