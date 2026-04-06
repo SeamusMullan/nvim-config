@@ -2,7 +2,7 @@
 local keymap = vim.keymap.set
 
 -- Space as leader
-vim.g.mapleader = " "
+vim.g.mapleader = "<Space>"
 
 -- Example keymaps
 keymap("n", "<leader>w", ":w<CR>", { desc = "Save file" })

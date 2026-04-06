@@ -131,7 +131,6 @@ vim.cmd.colorscheme("catppuccin")
 -- Lualine
 require("lualine").setup({
   options = {
-    theme = "catppuccin",
     section_separators = "",
     component_separators = "",
   },
@@ -173,7 +172,7 @@ cmp.setup({
 -- Treesitter setup
 -------------------------------------------------------------------------------
 require("nvim-treesitter.configs").setup({
-  ensure_installed = { "c", "cpp", "python", "lua", "vim", "vimdoc" },
+  ensure_installed = { "c", "cpp", "python", "lua", "vim", "vimdoc", "rust" },
   auto_install = true,
 
   highlight = {
@@ -232,6 +231,18 @@ vim.lsp.config("*", {
 })
 
 -- clangd (C/C++)
+-- clangd (C/C++)
+vim.lsp.config("clangd", {
+  capabilities = capabilities,
+  cmd = {
+    "clangd",
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu",
+    "--completion-style=detailed",
+    "--function-arg-placeholders",
+  },
+})
 vim.lsp.enable("clangd")
 
 -- pyright (Python)
@@ -249,6 +260,11 @@ vim.lsp.config.lua_ls = {
   },
 }
 vim.lsp.enable("lua_ls")
+
+vim.lsp.enable("qmlls")
+vim.lsp.config("qmlls", {
+    cmd = { "qmlls6" },
+})
 
 -- for diagnostics and error messages
 
