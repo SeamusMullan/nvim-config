@@ -1,20 +1,20 @@
 " Special
-let g:color0  = '#04111B'
-let g:color1  = '#54A963'
-let g:color2  = '#D9EC52'
-let g:color3  = '#08A396'
-let g:color4  = '#72BFB1'
-let g:color5  = '#09D1B1'
-let g:color6  = '#59D4BA'
-let g:color7  = '#7fe7dd'
-let g:color8  = '#58a19a'
-let g:color9  = '#54A963'
-let g:color10 = '#D9EC52'
-let g:color11 = '#08A396'
-let g:color12 = '#72BFB1'
-let g:color13 = '#09D1B1'
-let g:color14 = '#59D4BA'
-let g:color15 = '#7fe7dd'
+let g:color0  = '#101111'
+let g:color1  = '#53676A'
+let g:color2  = '#76817E'
+let g:color3  = '#2F728D'
+let g:color4  = '#2B97B9'
+let g:color5  = '#64979D'
+let g:color6  = '#96ACAC'
+let g:color7  = '#cddbda'
+let g:color8  = '#8f9998'
+let g:color9  = '#53676A'
+let g:color10 = '#76817E'
+let g:color11 = '#2F728D'
+let g:color12 = '#2B97B9'
+let g:color13 = '#64979D'
+let g:color14 = '#96ACAC'
+let g:color15 = '#cddbda'
 
 set background=dark
 hi clear
@@ -24,22 +24,22 @@ endif
 let g:colors_name="wal"
 
 " Set highlights
-hi Normal       guifg=#7fe7dd guibg=#04111B
-hi NonText      guifg=#58a19a
-hi Comment      guifg=#58a19a
-hi Constant     guifg=#08A396
-hi String       guifg=#D9EC52
-hi Identifier   guifg=#72BFB1
-hi Function     guifg=#72BFB1
-hi Statement    guifg=#09D1B1
-hi PreProc      guifg=#59D4BA
-hi Type         guifg=#59D4BA
-hi Special      guifg=#7fe7dd
-hi Underlined   guifg=#72BFB1 gui=underline
-hi Error        guifg=#54A963 guibg=#04111B
-hi Todo         guifg=#04111B guibg=#08A396
-hi LineNr       guifg=#58a19a
-hi CursorLineNr guifg=#7fe7dd
-hi Visual       guibg=#58a19a
-hi Pmenu        guifg=#7fe7dd guibg=#58a19a
-hi PmenuSel     guifg=#04111B guibg=#72BFB1
+hi Normal       guifg=#cddbda guibg=#101111
+hi NonText      guifg=#8f9998
+hi Comment      guifg=#8f9998
+hi Constant     guifg=#2F728D
+hi String       guifg=#76817E
+hi Identifier   guifg=#2B97B9
+hi Function     guifg=#2B97B9
+hi Statement    guifg=#64979D
+hi PreProc      guifg=#96ACAC
+hi Type         guifg=#96ACAC
+hi Special      guifg=#cddbda
+hi Underlined   guifg=#2B97B9 gui=underline
+hi Error        guifg=#53676A guibg=#101111
+hi Todo         guifg=#101111 guibg=#2F728D
+hi LineNr       guifg=#8f9998
+hi CursorLineNr guifg=#cddbda
+hi Visual       guibg=#8f9998
+hi Pmenu        guifg=#cddbda guibg=#8f9998
+hi PmenuSel     guifg=#101111 guibg=#2B97B9
