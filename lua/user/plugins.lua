@@ -252,7 +252,7 @@ vim.lsp.config("clangd", {
     "--clang-tidy",
     "--header-insertion=iwyu",
     "--completion-style=detailed",
-    "--function-arg-placeholders",
+    "--function-arg-placeholders=true",
   },
 })
 vim.lsp.enable("clangd")
