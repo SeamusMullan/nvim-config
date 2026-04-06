@@ -12,6 +12,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local wal_colors = vim.fn.expand("~/.config/nvim/colors/wal.vim")
+
 -- Plugins
 require("lazy").setup({
 
@@ -19,10 +21,10 @@ require("lazy").setup({
   -- UI & appearance
   ---------------------------------------------------------------------------
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 }, -- Colorscheme
-  { "nvim-lualine/lualine.nvim" }, -- Statusline
-  { "nvim-tree/nvim-web-devicons" }, -- Icons
+  { "nvim-lualine/lualine.nvim", event = "VeryLazy" }, -- Statusline
+  { "nvim-tree/nvim-web-devicons", event = "VeryLazy" }, -- Icons
   {
- "andweeb/presence.nvim",
+    "andweeb/presence.nvim",
   event = "VeryLazy", -- Load after startup for better performance
   config = function()
     require("presence").setup({
@@ -126,7 +128,17 @@ require("lazy").setup({
 -------------------------------------------------------------------------------
 
 -- Colorscheme
-vim.cmd.colorscheme("catppuccin")
+if vim.fn.filereadable(wal_colors) == 1 then
+  vim.cmd.colorscheme("wal")
+
+  vim.api.nvim_create_autocmd("FocusGained", {
+    callback = function()
+      vim.cmd("source " .. wal_colors)
+    end,
+  })
+else
+  vim.cmd.colorscheme("catppuccin")
+end
 
 -- Lualine
 require("lualine").setup({
@@ -249,7 +261,7 @@ vim.lsp.enable("clangd")
 vim.lsp.enable("pyright")
 
 -- lua_ls (Lua) with custom settings
-vim.lsp.config.lua_ls = {
+vim.lsp.config("lua_ls", {
   capabilities = capabilities,
   settings = {
     Lua = {
@@ -258,13 +270,13 @@ vim.lsp.config.lua_ls = {
       },
     },
   },
-}
+})
 vim.lsp.enable("lua_ls")
 
-vim.lsp.enable("qmlls")
 vim.lsp.config("qmlls", {
-    cmd = { "qmlls6" },
+  cmd = { "qmlls6" },
 })
+vim.lsp.enable("qmlls")
 
 -- for diagnostics and error messages
 
